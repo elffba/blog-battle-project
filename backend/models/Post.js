@@ -31,10 +31,25 @@ const postSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  // Belki daha detaylı:
-  // currentMatch: { type: mongoose.Schema.Types.ObjectId, ref: 'Match', default: null },
-  // matchWins: { type: Number, default: 0 },
-  // isActiveInTournament: { type: Boolean, default: true }
+  wins: { // Kaç eşleşme kazandığı
+    type: Number,
+    default: 0,
+  },
+    // --- YENİ TURNUVA ALANLARI ---
+  currentRound: { // Postun şu anki turnuvada hangi turda olduğu
+    type: Number,
+    default: 1, // Tüm postlar 1. turdan başlar
+  },
+  isEliminated: { // Postun turnuvadan elenip elenmediği
+    type: Boolean,
+    default: false,
+  },
+  isActiveInTournament: { // Postun hala aktif olarak turnuvada yarışıp yarışmadığı
+                           // (elenmemiş VE henüz tüm turları bitirmemiş)
+    type: Boolean,
+    default: true, // Yeni eklenen postlar varsayılan olarak turnuvada aktif
+  },
+  // --- --
 }, {
   timestamps: true
 });

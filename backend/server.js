@@ -1,10 +1,12 @@
 // server.js
+const cors = require('cors');
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
-const cors = require('cors');
+
 const connectDB = require('./config/db'); // Veritabanı bağlantı fonksiyonu
 const authRoutes = require('./routes/authRoutes'); // Auth route'ları
+const matchRoutes = require('./routes/matchRoutes'); // <--- YENİ EKLENDİ
 const { notFound, errorHandler } = require('./middleware/errorMiddleware'); // Hata middleware'leri
 const postRoutes = require('./routes/postRoutes'); // YENİ EKLENDİ: Post route'larını import et
 
@@ -37,6 +39,7 @@ app.get('/', (req, res) => {
 // /api/auth ile başlayan tüm istekleri authRoutes'a yönlendir
 app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes); // YENİ EKLENDİ: /api/posts ile başlayan istekleri postRoutes'a yönlendir
+app.use('/api/matches', matchRoutes); // <--- YENİ EKLENDİ
 
 
 // ---- Diğer route'ları buraya ekleyeceğiz (örn: /api/posts) ----

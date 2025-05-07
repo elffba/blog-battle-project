@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@/*": ["./src/*"] // Alias tanımı
+      },
+      "jsx": "react-jsx" // React JSX desteği için eklemek iyi olur
+    },
+    "include": ["src"] // Alias'ın geçerli olacağı klasör
+  }
