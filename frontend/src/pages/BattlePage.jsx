@@ -111,7 +111,7 @@ function BattlePage() {
 
   return (
     <div className="p-2 md:p-6 min-h-[calc(100vh-8rem)]"> {/* Navbar yüksekliğini çıkararak tüm ekranı kaplamasını sağla */}
-      <h1 className="text-4xl font-bold text-center mb-6 animate-pulse text-primary">
+      <h1 className="text-4xl font-bold text-center mb-6 text-neutral">
         BLOG BATTLE!
       </h1>
       <p className="text-center text-lg mb-8 text-base-content/70">
@@ -148,7 +148,7 @@ function BattlePage() {
                 <div className="card-actions justify-center">
                   <button
                     onClick={() => handleVote(currentPost._id)}
-                    className={`btn ${index === 0 ? 'btn-primary' : 'btn-secondary'} btn-wide`}
+                    className="btn btn-neutral btn-sm normal-case rounded-md" // btn-ghost yerine btn-neutral, text-primary'yi kaldırdık
                     disabled={isLoading}
                   >
                     Buna Oy Ver!

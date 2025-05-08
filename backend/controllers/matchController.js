@@ -159,72 +159,71 @@ const voteOnMatch = asyncHandler(async (req, res) => {
 // @access  Private (veya Admin)
 const finishMatch = asyncHandler(async (req, res) => {
   const { matchId } = req.params;
-  // Populate etmeden önce eşleşmeyi bulalım, ID'leri alalım
+  console.log(`--- finishMatch çağrıldı: ${matchId} ---`);
+
   const match = await Match.findById(matchId);
 
-  if (!match) { res.status(404); throw new Error('Eşleşme bulunamadı.'); }
-  if (match.status !== 'active') { res.status(400); throw new Error('Sadece aktif eşleşmeler sonlandırılabilir.'); }
+  if (!match) {
+    console.log(`HATA: Eşleşme bulunamadı: ${matchId}`);
+    res.status(404); throw new Error('Eşleşme bulunamadı.');
+  }
+  if (match.status !== 'active') {
+    console.log(`HATA: Eşleşme aktif değil, sonlandırılamaz: ${matchId}, Durum: ${match.status}`);
+    res.status(400); throw new Error('Sadece aktif eşleşmeler sonlandırılabilir.');
+  }
+
+  console.log(`Eşleşme bulundu. Oylar - Post1: ${match.votesPost1}, Post2: ${match.votesPost2}`);
 
   let winnerId = null;
   let loserId = null;
   let isTie = false;
 
-  // Kazananı/Kaybedeni Belirle
   if (match.votesPost1 > match.votesPost2) {
-    winnerId = match.post1; // ObjectId
-    loserId = match.post2;  // ObjectId
+    winnerId = match.post1;
+    loserId = match.post2;
+    console.log(`Kazanan Post ID: ${winnerId} (Post1)`);
   } else if (match.votesPost2 > match.votesPost1) {
-    winnerId = match.post2; // ObjectId
-    loserId = match.post1;  // ObjectId
+    winnerId = match.post2;
+    loserId = match.post1;
+    console.log(`Kazanan Post ID: ${winnerId} (Post2)`);
   } else {
     isTie = true;
     console.log(`Maç (${matchId}) berabere bitti.`);
   }
 
-  // Önce Match dökümanını güncelle ve kaydet
   match.winner = winnerId;
   match.status = 'finished';
-  const updatedMatchInDB = await match.save(); // Kaydedilmiş maçı al
+  const updatedMatchInDB = await match.save();
+  console.log('Match dökümanı güncellendi: status=finished, winner=', winnerId);
 
-  // Sonra Post dökümanlarını güncelle (Hata olursa logla ama işlem devam etsin)
   try {
     if (winnerId) {
-      await Post.findByIdAndUpdate(winnerId, {
-        $inc: { wins: 1, currentRound: 1 }, // Kazanmayı ve turu artır
-        $set: { // Boolean alanları açıkça ayarla
-          isEliminated: false,
-          isActiveInTournament: true,
-        }
-      });
-      console.log(`Post ${winnerId} kazanan olarak güncellendi.`);
+      const winningPostUpdate = await Post.findByIdAndUpdate(winnerId, {
+        $inc: { wins: 1, currentRound: 1 },
+        $set: { isEliminated: false, isActiveInTournament: true }
+      }, { new: true }); // { new: true } güncellenmiş dökümanı döndürür
+      console.log(`KAZANAN Post ${winnerId} güncellendi. Yeni wins: ${winningPostUpdate?.wins}, Yeni round: ${winningPostUpdate?.currentRound}`);
     }
     if (loserId) {
-      await Post.findByIdAndUpdate(loserId, {
-        $set: { // Kaybedenin turu veya kazanması değişmez, sadece elenir
-          isEliminated: true,
-          isActiveInTournament: false,
-        }
-      });
-      console.log(`Post ${loserId} kaybeden olarak güncellendi.`);
+      const losingPostUpdate = await Post.findByIdAndUpdate(loserId, {
+        $set: { isEliminated: true, isActiveInTournament: false }
+      }, { new: true });
+      console.log(`KAYBEDEN Post ${loserId} güncellendi. isEliminated: ${losingPostUpdate?.isEliminated}, isActive: ${losingPostUpdate?.isActiveInTournament}`);
     } else if (isTie) {
-      // Beraberlikte ikisi de elensin (PDF "kazanan üst tura çıkar" diyor)
-      await Post.findByIdAndUpdate(match.post1, { $set: { isActiveInTournament: false, isEliminated: true } });
-      await Post.findByIdAndUpdate(match.post2, { $set: { isActiveInTournament: false, isEliminated: true } });
-      console.log(`Beraberlik sonucu Post ${match.post1} ve Post ${match.post2} elendi.`);
+      await Post.findByIdAndUpdate(match.post1, { $set: { isActiveInTournament: false, isEliminated: true }});
+      await Post.findByIdAndUpdate(match.post2, { $set: { isActiveInTournament: false, isEliminated: true }});
+      console.log(`BERABERLİK: Post ${match.post1} ve Post ${match.post2} elendi olarak güncellendi.`);
     }
   } catch (postUpdateError) {
-    // Post güncellerken hata olursa logla, ama maç zaten bitti.
-    console.error("Maç sonrası post durumları güncellenirken hata oluştu:", postUpdateError);
-    // Bu durumda postların turnuva durumları tutarsız kalabilir,
-    // daha gelişmiş bir sistemde bu hatayı ele almak gerekir.
+    console.error("Maç sonrası POST GÜNCELLEME HATASI:", postUpdateError);
   }
 
-  // Yanıt için populate et
-  const populatedResult = await Match.findById(updatedMatchInDB._id)
+  const populatedResult = await Match.findById(updatedMatchInDB._id) /* ... (populate kısmı aynı) ... */
     .populate({ path: 'post1', select: 'title author votes wins currentRound isEliminated isActiveInTournament', populate: { path: 'author', select: 'username'} })
     .populate({ path: 'post2', select: 'title author votes wins currentRound isEliminated isActiveInTournament', populate: { path: 'author', select: 'username'} })
     .populate({ path: 'winner', select: 'title author', populate: { path: 'author', select: 'username'} });
 
+  console.log('--- finishMatch başarıyla tamamlandı ---');
   res.status(200).json(populatedResult);
 });
 

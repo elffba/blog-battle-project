@@ -34,19 +34,32 @@ const createPost = asyncHandler(async (req, res) => {
 
 // @desc    Get all posts
 // @route   GET /api/posts
-// @access  Public (Herkes erişebilir)
 const getPosts = asyncHandler(async (req, res) => {
-  // .populate ile 'author' alanındaki User ObjectId'sini kullanarak
-  // o kullanıcıya ait 'username' ve 'email' bilgilerini de getiriyoruz.
-  // .sort ile en son eklenen yazılar en üste gelecek şekilde sıralıyoruz.
-  const posts = await Post.find({})
-                          .populate('author', 'username email') // Yazarın sadece kullanıcı adı ve email'ini getir
-                          .sort({ createdAt: -1 }); // Oluşturulma tarihine göre tersten sırala
+  const posts = await Post.find({}) // Veritabanındaki tüm postları bul
+                          .populate('author', 'username email') // Yazar bilgilerini de getir (sadece username ve email)
+                          .sort({ createdAt: -1 }); // Oluşturulma tarihine göre en yeniden eskiye sırala
+
+  // --- KONSOL LOGLAMASI BAŞLANGIÇ ---
+  console.log('\n--- Backend: /api/posts GET isteği alındı ---');
+  if (posts && posts.length > 0) {
+    console.log('Frontend\'e gönderilecek postlar ve wins/votes değerleri:');
+    posts.forEach(p => {
+      console.log(
+        `  Başlık: "${p.title}", Wins: ${p.wins}, Votes: ${p.votes}, ID: ${p._id}`
+      );
+    });
+  } else {
+    console.log('Gönderilecek post bulunamadı.');
+  }
+  console.log('--- Backend log sonu ---\n');
+  // --- KONSOL LOGLAMASI BİTİŞ ---
 
   if (posts) {
     res.status(200).json(posts);
   } else {
-    res.status(404); // Normalde find({}) boş array döner, 404 pek olmaz ama genel bir kontrol
+    // Bu durum normalde Post.find({}) boş bir dizi [] döndürdüğü için pek oluşmaz.
+    // Ama bir veritabanı hatası olursa veya posts bir şekilde null/undefined olursa diye...
+    res.status(404);
     throw new Error('Yazılar bulunamadı.');
   }
 });
