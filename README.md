@@ -60,74 +60,83 @@ Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları takip ed
 
 ### Adımlar
 
-1.  **Projeyi Klonlama:**
-    ```bash
-    git clone [GitHub Repo Adresin]
-    cd blog-battle-project
-    ```
+1.  **Projeyi Klonlama:**
+    ```bash
+    git clone [GitHub Repo Adresin]
+    cd blog-battle-project
+    ```
 
-2.  **Backend Kurulumu:**
-    * `backend` klasörüne gidin:
-      ```bash
-      cd backend
-      ```
-    * Gerekli paketleri kurun:
-      ```bash
-      npm install
-      ```
-    * `.env` Dosyasını Oluşturun: `backend` klasörünün ana dizininde `.env` adında bir dosya oluşturun ve aşağıdaki değişkenleri kendi bilgilerinizle doldurun:
-      ```dotenv
-      NODE_ENV=development
-      PORT=5001 # Backend sunucusunun çalışacağı port (frontend'den farklı olmalı)
-      MONGO_URI=mongodb+srv://KULLANICI_ADIN:<SIFREN>@CLUSTER_ADIN.mongodb.net/blogBattleDb?retryWrites=true&w=majority # MongoDB bağlantı adresiniz
-      JWT_SECRET=cokgizlibirjsonwebtokenanahtaribunuuret # Güvenli bir JWT secret key üretin
-      ```
-      * **Not:** `MONGO_URI` için kendi MongoDB Atlas bağlantı string'inizi veya lokal MongoDB adresinizi kullanın. `blogBattleDb` yerine farklı bir veritabanı adı kullanabilirsiniz.
-    * Backend sunucusunu geliştirme modunda başlatın:
-      ```bash
-      npm run dev
-      ```
-      Sunucu varsayılan olarak `http://localhost:5001` adresinde çalışacaktır.
+2.  **Backend Kurulumu:**
+    * Backend klasörüne gidin:
+      ```bash
+      cd backend
+      ```
+    * Gerekli paketleri kurun:
+      ```bash
+      npm install
+      ```
+    * `.env` Dosyasını Oluşturun: `backend` klasörünün ana dizininde `.env` adında bir dosya oluşturun ve aşağıdaki değişkenleri kendi bilgilerinizle doldurun:
+      ```dotenv
+      NODE_ENV=development
+      PORT=5001 # Backend sunucusunun çalışacağı port (frontend'den farklı olmalı)
+      MONGO_URI=mongodb+srv://KULLANICI_ADIN:<SIFREN>@CLUSTER_ADIN.mongodb.net/blogBattleDb?retryWrites=true&w=majority # MongoDB bağlantı adresiniz
+      JWT_SECRET=cokgizlibirjsonwebtokenanahtaribunuuret # Güvenli bir JWT secret key üretin
+      ```
+      * **Not:** `MONGO_URI` için kendi MongoDB Atlas bağlantı string'inizi veya lokal MongoDB adresinizi kullanın. `blogBattleDb` yerine farklı bir veritabanı adı kullanabilirsiniz.
+    * Backend sunucusunu geliştirme modunda başlatın:
+      ```bash
+      npm run dev
+      ```
+      Sunucu varsayılan olarak `http://localhost:5001` adresinde çalışacaktır.
 
-3.  **Frontend Kurulumu:**
-    * **Yeni bir terminal açın** (backend sunucusu çalışmaya devam etmeli).
-    * Projenin ana dizininden `frontend` klasörüne gidin:
-      ```bash
-      cd ../frontend
-      # Veya proje ana dizinindeyken: cd frontend
-      ```
-    * Gerekli paketleri kurun:
-      ```bash
-      npm install
-      ```
-    * Frontend uygulamasını geliştirme modunda başlatın:
-      ```bash
-      npm run dev
-      ```
-      Uygulama genellikle `http://localhost:5173` adresinde açılacaktır (terminaldeki adresi kontrol edin).
+3.  **Frontend Kurulumu:**
+    * **Yeni bir terminal açın** (backend sunucusu çalışmaya devam etmeli).
+    * Projenin ana dizininden `frontend` klasörüne gidin:
+      ```bash
+      cd ../frontend
+      # Veya proje ana dizinindeyken: cd frontend
+      ```
+    * Gerekli paketleri kurun:
+      ```bash
+      npm install
+      ```
+    * Frontend uygulamasını geliştirme modunda başlatın:
+      ```bash
+      npm run dev
+      ```
+      Uygulama genellikle `http://localhost:5173` adresinde açılacaktır (terminaldeki adresi kontrol edin).
 
-4.  **Uygulamayı Kullanma:**
-    * Tarayıcınızda frontend adresini (`http://localhost:5173`) açın.
-    * Yeni bir hesapla kayıt olun veya mevcut bir hesapla giriş yapın.
-    * Yazı oluşturun, oylama sayfasına gidin, oy verin!
-    * Yeni eşleşmeler başlatmak için anasayfadaki "Yeni Kapışma Başlat!" butonunu kullanabilirsiniz.
+4.  **Uygulamayı Kullanma:**
+    * Tarayıcınızda frontend adresini (`http://localhost:5173`) açın.
+    * Yeni bir hesapla kayıt olun veya mevcut bir hesapla giriş yapın.
+    * Yazı oluşturun, oylama sayfasına gidin, oy verin!
+    * Yeni eşleşmeler başlatmak için anasayfadaki "Yeni Kapışma Başlat!" butonunu kullanabilirsiniz.
+    * 
+## API Endpointleri (Özet)
 
-## API Endpointleri (Özet - İsteğe Bağlı)
+Bu proje aşağıdaki temel API endpointlerini sunmaktadır:
 
-* **Auth:**
-    * `POST /api/auth/register`: Yeni kullanıcı kaydı.
-    * `POST /api/auth/login`: Kullanıcı girişi, JWT döndürür.
-* **Posts:**
-    * `GET /api/posts`: Tüm postları listeler.
-    * `POST /api/posts`: Yeni post oluşturur (Token Gerekli, FormData).
-    * `GET /api/posts/:id`: Tek bir postun detayını getirir.
-    * `PUT /api/posts/:id`: Bir postu günceller (Token Gerekli, Yazar Kontrolü, FormData).
-    * `DELETE /api/posts/:id`: Bir postu siler (Token Gerekli, Yazar Kontrolü).
-* **Matches:**
-    * `POST /api/matches/start`: Yeni bir aktif eşleşme başlatır. (Body'de `{ "category": "..." }` gönderilebilir).
-    * `GET /api/matches/active`: Rastgele bir aktif eşleşmeyi getirir.
-    * `POST /api/matches/:matchId/vote`: Belirli bir eşleşmeye oy verir (Token Gerekli, Body: `{ "votedForPostId": "..." }`).
-    * `POST /api/matches/:matchId/finish`: Aktif bir eşleşmeyi sonlandırır, kazananı belirler (Token Gerekli).
+### Auth (Kimlik Doğrulama)
+
+* `POST /api/auth/register`: Yeni bir kullanıcı kaydı gerçekleştirir.
+* `POST /api/auth/login`: Kullanıcının giriş yapmasını sağlar ve bir JWT (JSON Web Token) döndürür.
+
+### Posts (Yazılar)
+
+* `GET /api/posts`: Sistemdeki tüm blog yazılarını listeler.
+* `POST /api/posts`: Yeni bir blog yazısı oluşturur. **(Token Gerekli, FormData)**
+* `GET /api/posts/:id`: Belirli bir ID'ye sahip blog yazısının detaylarını getirir.
+* `PUT /api/posts/:id`: Belirli bir ID'ye sahip blog yazısını günceller. **(Token Gerekli, Yazar Kontrolü, FormData)**
+* `DELETE /api/posts/:id`: Belirli bir ID'ye sahip blog yazısını siler. **(Token Gerekli, Yazar Kontrolü)**
+
+### Matches (Eşleşmeler)
+
+* `POST /api/matches/start`: Yeni bir aktif eşleşme başlatır. **(İsteğe bağlı olarak body'de `{ "category": "..." }` ile kategori belirtilebilir)**
+* `GET /api/matches/active`: Oylama için rastgele bir aktif eşleşmeyi getirir.
+* `POST /api/matches/:matchId/vote`: Belirli bir eşleşmeye oy verir. **(Token Gerekli, Body: `{ "votedForPostId": "..." }`)**
+* `POST /api/matches/:matchId/finish`: Aktif bir eşleşmeyi sonlandırır ve kazananı belirler. **(Token Gerekli)**
+
+**Not:** Bu API endpointleri Insomnia kullanılarak test edilmiştir.
 
 ## Bilinen Kısıtlamalar ve Olası İyileştirmeler
 
