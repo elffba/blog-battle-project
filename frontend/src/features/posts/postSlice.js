@@ -2,13 +2,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Backend API URL'si (Post endpoint'leri için)
 const API_URL = 'http://localhost:5001/api/posts/';
 
-// Başlangıç state'i
 const initialState = {
-  posts: [],          // Tüm postların listesi
-  post: null,           // Tek bir postu tutmak için (detay/güncelleme) - şimdilik null
+  posts: [],          
+  post: null,           
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -17,10 +15,9 @@ const initialState = {
 
 // --- Async Thunks ---
 
-// Get all posts
 export const getPosts = createAsyncThunk(
   'posts/getAll',
-  async (_, thunkAPI) => { // İlk argüman (payload) yoksa '_' kullanabiliriz
+  async (_, thunkAPI) => { 
     try {
       const response = await axios.get(API_URL); // GET isteği
       return response.data; // Dönen post listesi
@@ -36,24 +33,20 @@ export const getPosts = createAsyncThunk(
   }
 );
 
-// Create new post
-// postData: { title, content, category, image } -> FormData olarak gelecek!
+
 export const createPost = createAsyncThunk(
   'posts/create',
   async (postData, thunkAPI) => {
     try {
-      // Token'ı auth state'inden almamız gerekiyor!
       const token = thunkAPI.getState().auth.token; // store'daki auth slice'ından token'ı oku
 
-      // Axios request config (token ve FormData için)
+      // Axios request config 
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
-          // 'Content-Type': 'multipart/form-data' // Axios FormData gönderirken bunu genelde otomatik ayarlar
         },
       };
 
-      // POST isteği (postData FormData olmalı)
       const response = await axios.post(API_URL, postData, config);
       return response.data; // Oluşturulan post verisi
     } catch (error) {
@@ -70,10 +63,10 @@ export const createPost = createAsyncThunk(
 
 // Get single post by ID
 export const getPostById = createAsyncThunk(
-  'posts/getOne', // Action type prefix
+  'posts/getOne', 
   async (postId, thunkAPI) => {
     try {
-      const response = await axios.get(API_URL + postId); // API_URL'in sonuna postId'yi ekle
+      const response = await axios.get(API_URL + postId); 
       return response.data; // Dönen tek post nesnesi
     } catch (error) {
       const message =
@@ -113,7 +106,7 @@ export const deletePost = createAsyncThunk(
 );
 
 // Update post
-// Argüman olarak { postId, postData } alacak. postData FormData olacak.
+// Argüman olarak { postId, postData } alacak. postData FormData 
 export const updatePost = createAsyncThunk(
   'posts/update',
   async ({ postId, postData }, thunkAPI) => {
@@ -122,11 +115,11 @@ export const updatePost = createAsyncThunk(
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
-          // 'Content-Type': 'multipart/form-data' // Axios FormData ile otomatik ayarlar
+          // 'Content-Type': 'multipart/form-data' 
         },
       };
       const response = await axios.put(API_URL + postId, postData, config);
-      return response.data; // Güncellenmiş post verisi
+      return response.data; 
     } catch (error) {
       const message =
         (error.response &&
@@ -139,13 +132,12 @@ export const updatePost = createAsyncThunk(
   }
 );
 
-
 // --- Slice Tanımı ---
 export const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
-    reset: (state) => { // initialState'e resetlerken post'u da null yapalım
+    reset: (state) => { 
       state.posts = [];
       state.post = null;
       state.isError = false;
@@ -158,7 +150,7 @@ export const postSlice = createSlice({
         state.isError = false;
         state.isSuccess = false;
         state.message = '';
-        state.post = null; // Tek postu da sıfırla
+        state.post = null; 
     }
   },
   extraReducers: (builder) => {
@@ -169,7 +161,6 @@ export const postSlice = createSlice({
       })
       .addCase(getPosts.fulfilled, (state, action) => {
         state.isLoading = false;
-        // state.isSuccess = true; // Genellikle listeleme için bu gerekli değil
         state.posts = action.payload;
       })
       .addCase(getPosts.rejected, (state, action) => {
@@ -189,9 +180,6 @@ export const postSlice = createSlice({
       .addCase(createPost.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        // state.posts.unshift(action.payload); // Yeni postu listenin başına ekleyebiliriz
-                                              // Veya sadece mesaj verip listenin yeniden çekilmesini bekleyebiliriz.
-                                              // Şimdilik sadece mesaj verelim.
         state.message = 'Yazı başarıyla oluşturuldu!';
       })
       .addCase(createPost.rejected, (state, action) => {
@@ -200,18 +188,16 @@ export const postSlice = createSlice({
         state.message = action.payload;
       })
 
-      // getPostById Thunk Durumları (EKSİK OLAN KISIM BUYDU)
       .addCase(getPostById.pending, (state) => {
         state.isLoading = true;
-        state.post = null; // Yeni post yüklenirken eskisini temizle
+        state.post = null; 
         state.isSuccess = false;
         state.isError = false;
         state.message = '';
       })
       .addCase(getPostById.fulfilled, (state, action) => {
         state.isLoading = false;
-        // state.isSuccess = true; // GET için genellikle bu işaretlenmez
-        state.post = action.payload; // Gelen tek postu state'e ata
+        state.post = action.payload; 
       })
       .addCase(getPostById.rejected, (state, action) => {
         state.isLoading = false;
@@ -228,10 +214,9 @@ export const postSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.message = 'Yazı başarıyla silindi!';
-        // Eğer state.posts güncel tutuluyorsa, silinen postu buradan çıkar:
-        state.posts = state.posts.filter((p) => p._id !== action.payload); // action.payload silinen postId idi
+        state.posts = state.posts.filter((p) => p._id !== action.payload); 
         if (state.post && state.post._id === action.payload) {
-          state.post = null; // Eğer detayda gösterilen post silindiyse onu da temizle
+          state.post = null; 
         }
       })
       .addCase(deletePost.rejected, (state, action) => {
@@ -239,7 +224,7 @@ export const postSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       });
-      // TODO: updatePost için de durumları ekle (Bu hala yapılacak)
+      
   },
 });
 

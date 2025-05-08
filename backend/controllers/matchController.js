@@ -1,11 +1,8 @@
-// backend/controllers/matchController.js
 const Match = require('../models/Match');
 const Post = require('../models/Post');
 const asyncHandler = require('express-async-handler');
 
-// @desc    Start a new match
-// @route   POST /api/matches/start
-// @access  Public (veya Private/Admin)
+
 const startNewMatch = asyncHandler(async (req, res) => {
   console.log('\n--- startNewMatch (Basitleştirilmiş) Başladı ---');
   const { category } = req.body;
@@ -34,8 +31,8 @@ const startNewMatch = asyncHandler(async (req, res) => {
     console.log('Kategori filtresi yok.');
   }
 
-  // 3. Uygun postlar arasından rastgele 2 tane seç
-  // Not: $match'ten sonra $sample kullanmak için aggregate kullanıyoruz.
+  // uygun postlar arasından rastgele 2 tane seç
+ 
   const potentialPosts = await Post.aggregate([
     { $match: queryCriteria },
     { $sample: { size: 2 } }
@@ -52,13 +49,12 @@ const startNewMatch = asyncHandler(async (req, res) => {
   const post2 = potentialPosts[1];
   console.log(`Seçilen postlar: ${post1.title} vs ${post2.title}`);
 
-  // 4. Eşleşmeyi oluştur
+  // eşleşmeyi oluştur
   const newMatchData = {
     post1: post1._id,
     post2: post2._id,
     status: 'active',
-    // round: 1 // Match modelinde round alanı varsa ve default:1 ise otomatik set edilir.
-              // Veya bu alanı Match modelinden tamamen kaldırabiliriz. Şimdilik kalsın.
+  
   };
   console.log('Yeni eşleşme oluşturuluyor:', newMatchData);
   const newMatch = await Match.create(newMatchData);
@@ -74,9 +70,6 @@ const startNewMatch = asyncHandler(async (req, res) => {
 });
 
 
-// @desc    Get a random active match (or the first one found)
-// @route   GET /api/matches/active
-// @access  Public
 const getActiveMatch = asyncHandler(async (req, res) => {
   const activeMatches = await Match.aggregate([
     { $match: { status: 'active' } },
@@ -86,22 +79,14 @@ const getActiveMatch = asyncHandler(async (req, res) => {
   if (activeMatches && activeMatches.length > 0) {
     const activeMatchDoc = activeMatches[0];
     
-    // Populate işlemi doğrudan aggregate edilmiş döküman üzerinde çalışmaz.
-    // Önce ID ile bulup sonra populate etmek daha güvenilir veya $lookup kullanmak gerekir.
-    // Basitlik adına, ID ile bulup populate edelim.
+    
     const populatedMatch = await Match.findById(activeMatchDoc._id)
       .populate({ path: 'post1', select: 'title content imageUrl category author votes wins', populate: { path: 'author', select: 'username'} })
       .populate({ path: 'post2', select: 'title content imageUrl category author votes wins', populate: { path: 'author', select: 'username'} });
 
     if (!populatedMatch || !populatedMatch.post1 || !populatedMatch.post2) {
-        // Eğer populate sonrası post1 veya post2 null ise (örn: postlar silinmişse)
-        // bu eşleşmeyi 'finished' yapıp hata verebilir veya farklı bir aktif maç arayabiliriz.
-        // Şimdilik: Eğer populate başarısız olursa, o maçı geç ve başka aktif maç ara (veya hata ver)
+      
         console.warn(`Aktif maç ${activeMatchDoc._id} için postlar populate edilemedi, muhtemelen postlar silinmiş.`);
-        // Bu durumda, bu 'hayalet' maçı bitmiş sayıp başka bir aktif maç arayabiliriz.
-        // Veya basitçe 404 dönebiliriz. Şimdilik 404 dönelim.
-        // await Match.findByIdAndUpdate(activeMatchDoc._id, { status: 'finished', winner: null }); // Hayalet maçı bitir
-        // return getActiveMatch(req, res); // Rekürsif çağrı dikkatli kullanılmalı
         res.status(404);
         throw new Error('Aktif eşleşme bulundu ancak yazı detayları yüklenemedi.');
     }
@@ -113,9 +98,7 @@ const getActiveMatch = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Vote on a match
-// @route   POST /api/matches/:matchId/vote
-// @access  Private
+
 const voteOnMatch = asyncHandler(async (req, res) => {
   const { matchId } = req.params;
   const { votedForPostId } = req.body;
@@ -154,9 +137,7 @@ const voteOnMatch = asyncHandler(async (req, res) => {
   res.status(200).json(populatedMatch);
 });
 
-// @desc    Finish an active match and determine the winner
-// @route   POST /api/matches/:matchId/finish
-// @access  Private (veya Admin)
+
 const finishMatch = asyncHandler(async (req, res) => {
   const { matchId } = req.params;
   console.log(`--- finishMatch çağrıldı: ${matchId} ---`);

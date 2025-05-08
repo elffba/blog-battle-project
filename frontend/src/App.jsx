@@ -1,7 +1,6 @@
-// src/App.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { useSelector } from 'react-redux'; // useSelector importu zaten var, güzel!
+import { useSelector } from 'react-redux'; 
 
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -13,20 +12,16 @@ import BattlePage from './pages/BattlePage';
 import Navbar from './components/Navbar';
 
 function App() {
-  // ---- EKSİK OLAN SATIR BURASIYDI ----
-  const { user } = useSelector((state) => state.auth); // <--- BU SATIRI EKLE!
-  // ------------------------------------
+  const { user } = useSelector((state) => state.auth); 
 
   return (
     <>
-    <Navbar /> {/* Navbar kendi iç padding'ine sahip (px-4 sm:px-6 lg:px-8) */}
+    <Navbar /> 
 
-    {/* Hoş geldin mesajı, Navbar ile aynı yan padding'i almalı */}
     {user && (
-      <div className="px-4 sm:px-6 lg:px-8 pt-4 pb-2"> {/* Sadece yan padding'ler + üst/alt */}
-        {/* Container ve max-width'i bir üst seviyede (main) veya burada da kullanabiliriz. */}
-        {/* Şimdilik sadece padding'i eşitleyelim Navbar ile. */}
-        <div className="container mx-auto max-w-7xl"> {/* İçeriği ortalamak için container */}
+      <div className="px-4 sm:px-6 lg:px-8 pt-4 pb-2"> 
+        
+        <div className="container mx-auto max-w-7xl"> 
           <p className="text-lg text-base-content/80">
             Merhaba, <span className="font-semibold text-success">{user.username}!</span>
           </p>
@@ -34,8 +29,7 @@ function App() {
       </div>
     )}
 
-      {/* Ana içerik alanı */}
-      <main className={`container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${user ? 'py-4' : 'py-8'}`}> {/* Eğer hoş geldin mesajı varsa üst padding'i azalt */}
+      <main className={`container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${user ? 'py-4' : 'py-8'}`}> 
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />

@@ -1,14 +1,11 @@
-// routes/authRoutes.js
 const express = require('express');
-const { registerUser, loginUser } = require('../controllers/authController'); // Controller fonksiyonlarını import et
+const { registerUser, loginUser } = require('../controllers/authController'); 
 
-const router = express.Router(); // Express router'ı oluştur
+const router = express.Router(); 
 
-// Kayıt endpoint'i: POST isteği /api/auth/register adresine gelirse registerUser çalışır
-router.post('/register', registerUser);
+// Kayıt endpoint'i
 
-// Giriş endpoint'i: POST isteği /api/auth/login adresine gelirse loginUser çalışır
+// Giriş endpoint'i
 router.post('/login', loginUser);
 
-// Router'ı dışa aktar ki ana server dosyamızda kullanabilelim
 module.exports = router;

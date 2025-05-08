@@ -1,4 +1,3 @@
-// src/pages/BattlePage.jsx
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
@@ -14,7 +13,6 @@ function BattlePage() {
   const { user } = useSelector((state) => state.auth);
 
   const [showResults, setShowResults] = useState(false);
-  // Kullanıcının bu spesifik maça (activeMatch._id) oy verip vermediğini session'dan bağımsız kontrol et
   const [userVotedInCurrentMatch, setUserVotedInCurrentMatch] = useState(false);
 
   useEffect(() => {
@@ -22,7 +20,6 @@ function BattlePage() {
       navigate('/login');
       return;
     }
-    // Sayfa yüklendiğinde veya kullanıcı değiştiğinde aktif eşleşmeyi çek
     dispatch(getActiveMatch());
 
     return () => {
@@ -30,14 +27,12 @@ function BattlePage() {
     };
   }, [dispatch, user, navigate]);
 
-  // activeMatch veya user değiştiğinde, kullanıcının bu maça oy verip vermediğini kontrol et
   useEffect(() => {
     if (activeMatch && user && activeMatch.voters && activeMatch.voters.includes(user._id)) {
       setUserVotedInCurrentMatch(true);
-      setShowResults(true); // Eğer zaten oy vermişse direkt sonuçları göster
+      setShowResults(true); 
     } else {
       setUserVotedInCurrentMatch(false);
-      // setShowResults(false); // Yeni bir maç yüklendiğinde sonuçları gizle, fetchNewMatch içinde yapılıyor.
     }
   }, [activeMatch, user]);
 
@@ -47,11 +42,9 @@ function BattlePage() {
       dispatch(resetMatchStatus());
     }
     if (isSuccess && message === 'Oyunuz başarıyla kaydedildi!') {
-      // alert(message); // Oy verdikten sonra direkt sonuçlar görüneceği için alert'e gerek yok
+
       setShowResults(true);
       setUserVotedInCurrentMatch(true); // Oy verdi olarak işaretle
-      // getActiveMatch'ı tekrar çağırmaya gerek yok, voteOnMatch zaten güncel eşleşmeyi döndürüyor
-      // ve activeMatch state'ini güncelliyor.
       dispatch(resetMatchStatus()); // Sadece status'ları resetle
     }
   }, [isError, isSuccess, message, dispatch]);
@@ -73,13 +66,13 @@ function BattlePage() {
 
   if (isLoading && !activeMatch) {
     return (
-      <div className="flex justify-center items-center min-h-[calc(100vh-10rem)]"> {/* Navbar yüksekliğini çıkar */}
+      <div className="flex justify-center items-center min-h-[calc(100vh-10rem)]"> 
         <span className="loading loading-lg loading-spinner text-primary"></span>
       </div>
     );
   }
 
-  if (!activeMatch && !isLoading) { // Hata durumunu da burada yakalayabiliriz isError ile
+  if (!activeMatch && !isLoading) { 
     return (
       <div className="text-center mt-10 p-4">
         <h2 className="text-2xl font-semibold mb-4">
@@ -92,7 +85,7 @@ function BattlePage() {
     );
   }
 
-  // activeMatch var ama postları yoksa (çok nadir bir durum, veri bozukluğu)
+
   if (!activeMatch?.post1 || !activeMatch?.post2) {
       return (
         <div className="text-center mt-10 p-4">
@@ -110,7 +103,7 @@ function BattlePage() {
   const displayResults = showResults || userVotedInCurrentMatch;
 
   return (
-    <div className="p-2 md:p-6 min-h-[calc(100vh-8rem)]"> {/* Navbar yüksekliğini çıkararak tüm ekranı kaplamasını sağla */}
+    <div className="p-2 md:p-6 min-h-[calc(100vh-8rem)]"> 
       <h1 className="text-4xl font-bold text-center mb-6 text-neutral">
         BLOG BATTLE!
       </h1>
@@ -123,7 +116,7 @@ function BattlePage() {
         {[activeMatch.post1, activeMatch.post2].map((currentPost, index) => (
           <div key={currentPost._id} className="card w-full lg:w-[45%] bg-base-100 shadow-xl transition-all hover:shadow-2xl">
             {currentPost.imageUrl && (
-              <figure className="h-64 overflow-hidden"> {/* Sabit yükseklik, taşan kısmı gizle */}
+              <figure className="h-64 overflow-hidden"> 
                 <img src={`http://localhost:5001${currentPost.imageUrl}`} alt={currentPost.title?.replace(/\"/g, '')} className="w-full h-full object-cover" />
               </figure>
             )}
@@ -148,7 +141,7 @@ function BattlePage() {
                 <div className="card-actions justify-center">
                   <button
                     onClick={() => handleVote(currentPost._id)}
-                    className="btn btn-neutral btn-sm normal-case rounded-md" // btn-ghost yerine btn-neutral, text-primary'yi kaldırdık
+                    className="btn btn-neutral btn-sm normal-case rounded-md" 
                     disabled={isLoading}
                   >
                     Buna Oy Ver!

@@ -1,8 +1,7 @@
-// src/pages/LoginPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom'; // Link component'ini de import et
-import { login, reset } from '../features/auth/authSlice'; // login thunk'ını import et
+import { useNavigate, Link } from 'react-router-dom'; 
+import { login, reset } from '../features/auth/authSlice'; 
 
 function LoginPage() {
   // Form girdileri için local state
@@ -44,23 +43,15 @@ function LoginPage() {
   // Başarı veya hata durumlarını izlemek için useEffect
   useEffect(() => {
     if (isError) {
-      // TODO: Hata mesajını daha kullanıcı dostu göster
       alert(`Giriş Hatası: ${message}`);
     }
 
-    // Giriş başarılıysa veya kullanıcı zaten giriş yapmışsa anasayfaya yönlendir
     if (isSuccess || user) {
       navigate('/'); // Anasayfaya yönlendir
     }
 
-    // Bu effect'in bağımlılıkları değiştiğinde (örn: isError, isSuccess) çalışır.
-    // Eğer bir işlem tamamlandıysa (başarılı veya hatalı), state'i sıfırlayabiliriz.
-    // Ancak, yönlendirme hemen oluyorsa, reset'i unmount'ta yapmak daha iyi olabilir.
-    // dispatch(reset()); // Şimdilik yoruma alalım, unmount'ta reset var.
-
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
-  // Component unmount olduğunda (sayfadan ayrılırken) hata/başarı durumunu temizle
   useEffect(() => {
     return () => {
       dispatch(reset());
@@ -106,7 +97,7 @@ function LoginPage() {
 
         <button
           type="submit"
-          className="btn btn-success w-full" // btn-primary yerine btn-success
+          className="btn btn-success w-full" 
           disabled={isLoading}
         >
           {isLoading ? (

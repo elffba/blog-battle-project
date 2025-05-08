@@ -1,4 +1,3 @@
-// src/pages/EditPostPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useParams, Link } from 'react-router-dom';

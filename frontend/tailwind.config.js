@@ -5,17 +5,16 @@ export default {
       "./src/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
-      extend: {}, // Burayı değiştirmene gerek yok şimdilik
+      extend: {}, 
     },
-    // --- Eklentiler Dizisine daisyui ekle ---
+    
     plugins: [
-      require('daisyui'), // <--- Bu satırı ekle
-      require('@tailwindcss/line-clamp'), // <--- Bunu ekle
+      require('daisyui'), 
+      require('@tailwindcss/line-clamp'), 
 
     ],
-    // --- DaisyUI için isteğe bağlı tema ayarları ---
     daisyui: {
-      themes: ["light", "dark"], // Kullanmak istediğin temaları buraya ekleyebilirsin (örn: "light", "dark", "cupcake", "synthwave" vb.)
-                                // Varsayılan olarak birçok tema gelir. Şimdilik light ve dark yeterli.
+      themes: ["light", "dark"], 
+                                
     },
   }

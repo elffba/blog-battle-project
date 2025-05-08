@@ -1,11 +1,9 @@
-// src/pages/PostDetailPage.jsx
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { getPostById, resetStatus, deletePost } from '../features/posts/postSlice';
 
 function PostDetailPage() {
-  // ... (hook tanımlamaları aynı) ...
   const { postId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,7 +17,6 @@ function PostDetailPage() {
   } = useSelector((state) => state.posts);
   const { user } = useSelector((state) => state.auth);
 
-  // ... (useEffect'ler aynı) ...
   useEffect(() => {
     if (postId) {
       dispatch(getPostById(postId));
@@ -31,11 +28,11 @@ function PostDetailPage() {
 
   useEffect(() => {
     if (isError && postMessage) {
-      alert(`Hata: ${postMessage}`); // TODO: Toast notification ile değiştir
+      alert(`Hata: ${postMessage}`); 
       dispatch(resetStatus());
     }
     if (postIsSuccess && postMessage === 'Yazı başarıyla silindi!') {
-      alert(postMessage); // TODO: Toast notification ile değiştir
+      alert(postMessage); 
       navigate('/');
     }
   }, [isError, postIsSuccess, postMessage, navigate, dispatch]);
@@ -58,23 +55,22 @@ function PostDetailPage() {
       return <div className="text-center mt-10 p-4">Yazı bulunamadı.</div>
   }
 
-  // --- TASARIM İYİLEŞTİRMELERİ BURADA ---
+  
   return (
-    // Arka planı hafif gri yapalım, daha yumuşak bir görünüm için
     <div className="bg-base-100 p-6 md:p-8 rounded-lg shadow-lg">
-      <article className="prose lg:prose-xl max-w-none"> {/* max-w-none ile prose'un genişlik kısıtlamasını kaldır */}
+      <article className="prose lg:prose-xl max-w-none"> 
         {post?.imageUrl && (
-          <figure className="mb-8"> {/* Görselin altına boşluk */}
+          <figure className="mb-8"> 
              <img
               src={`http://localhost:5001${post.imageUrl}`}
               alt={post.title?.replace(/\"/g, '')}
-              className="w-full h-auto object-cover rounded-lg shadow-md" // Gölge eklendi
+              className="w-full h-auto object-cover rounded-lg shadow-md" 
             />
           </figure>
         )}
 
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4"> {/* Başlık ve rozet (wrap ile küçük ekranda alt satıra iner)*/}
-          <h1 className="text-3xl md:text-4xl font-bold !mb-0"> {/* Margin sıfırlandı */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-4"> 
+          <h1 className="text-3xl md:text-4xl font-bold !mb-0"> 
               {post?.title?.replace(/\"/g, '')}
           </h1>
           {post?.wins > 0 && (
@@ -84,7 +80,6 @@ function PostDetailPage() {
           )}
         </div>
 
-        {/* Meta bilgiler (yazar, kategori vb.) için daha belirgin bir alan */}
         <div className="text-sm text-base-content/70 mb-6 border-b border-base-300 pb-3">
           <span>Yazar: <strong>{post?.author?.username || 'Bilinmiyor'}</strong></span> |{' '}
           <span>Kategori: <strong>{post?.category?.replace(/\"/g, '')}</strong></span> |{' '}
@@ -92,15 +87,12 @@ function PostDetailPage() {
           <span>Tarih: {post?.createdAt ? new Date(post.createdAt).toLocaleDateString() : ''}</span>
         </div>
 
-        {/* İçerik alanı */}
-        {/* whitespace-pre-wrap satır sonlarını korur, prose stilleri metni formatlar */}
-        <div className="prose-p:my-4 prose-headings:my-5 whitespace-pre-wrap"> {/* Paragraf ve başlık boşluklarını ayarla */}
+        <div className="prose-p:my-4 prose-headings:my-5 whitespace-pre-wrap"> 
             {post?.content?.replace(/\"/g, '')}
         </div>
 
-        {/* Düzenle/Sil Butonları */}
         {user && post?.author && user._id === post.author._id && (
-          <div className="mt-10 pt-6 border-t border-base-300 flex justify-end space-x-4"> {/* Sağa hizalı ve üst çizgi */}
+          <div className="mt-10 pt-6 border-t border-base-300 flex justify-end space-x-4"> 
             <Link to={`/edit-post/${post._id}`} className="btn btn-success">
               Düzenle
             </Link>

@@ -1,8 +1,7 @@
-// src/pages/CreatePostPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { createPost, resetStatus } from '../features/posts/postSlice'; // createPost ve resetStatus'ı import et
+import { createPost, resetStatus } from '../features/posts/postSlice'; 
 
 function CreatePostPage() {
   // Form girdileri için local state
@@ -18,7 +17,7 @@ function CreatePostPage() {
   const { isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.posts
   );
-  const { user } = useSelector((state) => state.auth); // Kullanıcı giriş yapmış mı kontrolü için
+  const { user } = useSelector((state) => state.auth); 
 
   // Form input değişikliklerini yöneten fonksiyonlar
   const onTitleChange = (e) => setTitle(e.target.value);
@@ -40,23 +39,21 @@ function CreatePostPage() {
       return;
     }
 
-    // FormData nesnesi oluştur (dosya yükleme için bu gerekli)
     const postData = new FormData();
     postData.append('title', title);
     postData.append('content', content);
     postData.append('category', category);
-    if (image) { // Sadece görsel seçildiyse FormData'ya ekle
-      postData.append('image', image); // Backend'deki multer 'image' alanını bekliyor
+    if (image) { 
+      postData.append('image', image); 
     }
 
     dispatch(createPost(postData));
   };
 
-  // Başarı veya hata durumlarını izlemek için useEffect
   useEffect(() => {
-    if (!user) { // Eğer kullanıcı giriş yapmamışsa login sayfasına yönlendir
+    if (!user) { 
       navigate('/login');
-      return; // Effect'in geri kalanının çalışmasını engelle
+      return; 
     }
 
     if (isError && message) { // Sadece mesaj varsa alert göster
@@ -64,17 +61,14 @@ function CreatePostPage() {
       dispatch(resetStatus()); // Hata gösterildikten sonra durumu sıfırla
     }
 
-    // Yazı oluşturma başarılıysa anasayfaya veya yazının detay sayfasına yönlendir
-    // Şimdilik anasayfaya yönlendirelim
-    if (isSuccess && message === 'Yazı başarıyla oluşturuldu!') { // Mesajı kontrol etmek daha güvenli
+   
+    if (isSuccess && message === 'Yazı başarıyla oluşturuldu!') { 
       alert('Yazı başarıyla oluşturuldu!'); // Başarı mesajı
       navigate('/'); // Anasayfaya yönlendir
-      // dispatch(resetStatus()); // Yönlendirmeden sonra veya unmount'ta yapılabilir
     }
 
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
-   // Component unmount olduğunda (sayfadan ayrılırken) post state'ini temizle
    useEffect(() => {
     return () => {
       dispatch(resetStatus());
@@ -85,7 +79,7 @@ function CreatePostPage() {
   return (
     <div className="flex flex-col items-center pt-10">
       <h1 className="text-3xl font-bold mb-6">Yeni Yazı Oluştur</h1>
-      <form onSubmit={onSubmit} className="w-full max-w-lg"> {/* Form genişliği artırıldı */}
+      <form onSubmit={onSubmit} className="w-full max-w-lg"> 
         <div className="form-control w-full mb-4">
           <label className="label" htmlFor="title">
             <span className="label-text">Başlık</span>
@@ -106,7 +100,7 @@ function CreatePostPage() {
           <label className="label" htmlFor="category">
             <span className="label-text">Kategori</span>
           </label>
-          <input // Veya select box kullanabilirsiniz
+          <input 
             type="text"
             id="category"
             name="category"
@@ -127,7 +121,7 @@ function CreatePostPage() {
             name="content"
             value={content}
             placeholder="Yazı içeriğini buraya yazın..."
-            className="textarea textarea-bordered w-full h-32" // Yükseklik artırıldı
+            className="textarea textarea-bordered w-full h-32" 
             onChange={onContentChange}
             required
           ></textarea>
@@ -149,7 +143,7 @@ function CreatePostPage() {
 
         <button
           type="submit"
-          className="btn btn-success w-full" // btn-primary yerine btn-success
+          className="btn btn-success w-full" 
           disabled={isLoading}
         >
           {isLoading ? (

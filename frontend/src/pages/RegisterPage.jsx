@@ -1,8 +1,7 @@
-// src/pages/RegisterPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { register, reset } from '../features/auth/authSlice'; // Thunk ve action'ı import et
+import { register, reset } from '../features/auth/authSlice'; 
 
 function RegisterPage() {
   // Form girdileri için local state
@@ -10,7 +9,7 @@ function RegisterPage() {
     username: '',
     email: '',
     password: '',
-    password2: '', // Şifre tekrarı kontrolü için
+    password2: '', 
   });
 
   const { username, email, password, password2 } = formData;
@@ -20,7 +19,7 @@ function RegisterPage() {
 
   // Redux store'dan ilgili state'leri seç
   const { user, token, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth // store.js'de 'auth' key'i ile tanımlamıştık
+    (state) => state.auth 
   );
 
   // Form input değişikliklerini yöneten fonksiyon
@@ -36,7 +35,6 @@ function RegisterPage() {
     e.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
 
     if (password !== password2) {
-      // TODO: Daha iyi bir hata gösterimi yapılabilir (örn: toast notification)
       alert('Şifreler eşleşmiyor!');
     } else {
       const userData = {
@@ -49,23 +47,14 @@ function RegisterPage() {
     }
   };
 
-   // Başarı veya hata durumlarını izlemek için useEffect
    useEffect(() => {
     if (isError) {
-       // TODO: Hata mesajını daha kullanıcı dostu göster (örn: alert, toast)
        alert(`Kayıt Hatası: ${message}`);
     }
 
-    // Kayıt başarılıysa veya kullanıcı zaten giriş yapmışsa (örn: state'te user varsa) anasayfaya yönlendir
     if (isSuccess || user) {
       navigate('/'); // Anasayfaya yönlendir
     }
-
-    // Her state değişikliğinden sonra auth state'ini (hata/başarı mesajlarını) sıfırla
-    // Eğer isSuccess'e göre yönlendirme yapıyorsak, sıfırlama hemen olmamalı,
-    // bu yüzden bu reset işlemini belki component unmount olurken yapmak daha iyi olabilir.
-    // Şimdilik burada bırakalım, gerekirse düzenleriz.
-     // dispatch(reset()); // <- Bu satırı şimdilik yoruma alalım veya unmount'a taşıyalım
 
   }, [user, isError, isSuccess, message, navigate, dispatch]);
 
@@ -95,7 +84,7 @@ function RegisterPage() {
             placeholder="Kullanıcı adınızı girin"
             className="input input-bordered w-full"
             onChange={onChange}
-            required // HTML5 ile basit zorunlu alan kontrolü
+            required 
           />
         </div>
 
@@ -150,17 +139,16 @@ function RegisterPage() {
 
         <button
           type="submit"
-          className="btn btn-success w-full" // btn-primary yerine btn-success
-          disabled={isLoading} // Yüklenme sırasında butonu devre dışı bırak
+          className="btn btn-success w-full" 
+          disabled={isLoading} 
         >
           {isLoading ? (
-            <span className="loading loading-spinner"></span> // DaisyUI yüklenme animasyonu
+            <span className="loading loading-spinner"></span> 
           ) : (
             'Kayıt Ol'
           )}
         </button>
 
-         {/* Hata mesajını göstermek için (Basit hali) */}
          {isError && message && (
             <div role="alert" className="alert alert-error mt-4">
                 <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2 2m2-2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>

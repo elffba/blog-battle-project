@@ -1,4 +1,3 @@
-// models/Match.js (İsteğe Bağlı ama Önerilir)
 const mongoose = require('mongoose');
 
 const matchSchema = new mongoose.Schema({

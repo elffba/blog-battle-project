@@ -1,20 +1,18 @@
-// src/components/Navbar.jsx
-import React, { useEffect } from 'react'; // useEffect'i tekrar ekledim, state reset için gerekebilir
+import React, { useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout, reset as resetAuthStatus } from '../features/auth/authSlice';
 import { startMatch, resetMatchStatus } from '../features/matches/matchSlice';
-import { Menu } from 'lucide-react'; // Menu ikonunu import et
+import { Menu } from 'lucide-react'; 
 
 function Navbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  // Sadece yüklenme durumunu alalım, mesajları artık burada göstermeyeceğiz
   const { isLoading: matchLoading } = useSelector((state) => state.match);
 
   const onLogout = () => {
-    console.log('Çıkış Yap Butonuna Tıklandı!'); // Log'u bıraktım, test için faydalı olabilir
+    console.log('Çıkış Yap Butonuna Tıklandı!'); 
     dispatch(logout());
     dispatch(resetAuthStatus());
     navigate('/');
@@ -41,12 +39,11 @@ function Navbar() {
       });
   };
 
-  // Component unmount olduğunda veya user değiştiğinde match status'u resetlemek iyi olabilir
   useEffect(() => {
     return () => {
         dispatch(resetMatchStatus());
     }
-  }, [dispatch]); // Sadece dispatch'e bağımlı (veya user değişince de resetleyebiliriz: [dispatch, user])
+  }, [dispatch]); 
 
   return (
     <div className="navbar bg-neutral text-neutral-content shadow-md px-4 sm:px-6 lg:px-8">
@@ -59,7 +56,6 @@ function Navbar() {
 
       {/* Orta Kısım (Boş) */}
       <div className="navbar-center hidden lg:flex">
-        {/* Boş bırakabiliriz */}
       </div>
 
       {/* Sağ Taraf */}
@@ -80,7 +76,6 @@ function Navbar() {
            <li className="ml-1">
              <Link to="/" className="btn btn-ghost btn-sm normal-case rounded-md">Anasayfa</Link>
            </li>
-           {/* Kullanıcı Durumuna Göre Değişenler */}
            {user ? (
              <>
                <li className="ml-1">
@@ -107,9 +102,8 @@ function Navbar() {
           <label tabIndex={0} className="btn btn-ghost btn-circle">
             <Menu className="h-5 w-5" />
           </label>
-          {/* onClick'leri li'ye taşıdık ve içerik <a> */}
+        
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[50] p-2 shadow bg-base-100 rounded-box w-52 text-base-content">
-            {/* Sıralama masaüstüne benzer */}
             <li onClick={!matchLoading ? handleStartNewMatch : undefined} className={matchLoading ? "disabled" : ""}>
                 <a>{matchLoading ? <span className="loading loading-spinner loading-xs"></span> : '⚡ Yeni Kapışma!'}</a>
             </li>

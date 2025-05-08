@@ -1,10 +1,9 @@
-// src/pages/HomePage.jsx
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { getPosts, resetStatus as resetPostStatus } from '../features/posts/postSlice';
 import { startMatch, resetMatchStatus } from '../features/matches/matchSlice';
-import { useNavigate } from 'react-router-dom'; // useNavigate'i import etmeyi unutmuşuz!
+import { useNavigate } from 'react-router-dom'; 
 
 function HomePage() {
   const dispatch = useDispatch();
@@ -31,7 +30,6 @@ function HomePage() {
 
   useEffect(() => {
       if (matchMessage && (matchError || matchSuccess)) {
-          // ... (alert ve navigate mantığı aynı) ...
           if (matchSuccess && matchMessage === 'Yeni eşleşme başarıyla başlatıldı!') {
               console.log("Yeni eşleşme başlatıldı, /battle sayfasına yönlendiriliyor...");
               dispatch(resetMatchStatus());
@@ -39,7 +37,7 @@ function HomePage() {
           } else if (matchError) { // Hata durumunda sadece alert gösterip sıfırla
               alert(`Eşleşme Başlatma Hatası: ${matchMessage}`);
               dispatch(resetMatchStatus());
-          } else { // Diğer başarı mesajları için (belki ileride eklenir)
+          } else { 
               dispatch(resetMatchStatus());
           }
       }
@@ -51,38 +49,33 @@ function HomePage() {
     dispatch(startMatch());
   };
 
-  // --- Sıralama Mantığını Buraya Taşıyalım ---
-  // Postların var olduğundan ve bir dizi olduğundan emin olalım
+  
   const sortedPosts = Array.isArray(posts)
     ? [...posts].sort((a, b) => (b.wins || 0) - (a.wins || 0))
     : [];
 
-  // --- Konsol Logları (Kontrol için) ---
   useEffect(() => {
     if (posts) {
       console.log('HomePage - Gelen Posts Verisi:', posts);
       console.log('HomePage - Sıralanmış Posts Verisi:', sortedPosts);
     }
-  }, [posts, sortedPosts]); // posts veya sortedPosts değiştiğinde logla
+  }, [posts, sortedPosts]); 
 
 
   // ---- Render Kısmı ----
 
-  if (postsLoading) { /* ... (Aynı) ... */ }
-  if (postsError) { /* ... (Aynı) ... */ }
+  if (postsLoading) {  }
+  if (postsError) {  }
 
   return (
     <div>
       
       <h1 className="text-3xl font-bold mb-8 text-center text-succes">Blog Yazıları</h1>
 
-      {/* Sıralanmış postları map ediyoruz */}
       {sortedPosts && sortedPosts.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {/* sortedPosts.map kısmı ve kart içeriği aynı kalabilir */}
               {sortedPosts.map((post) => (
                   <div key={post._id} className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 border border-base-300/60 rounded-lg flex flex-col">
-                     {/* ... Kart içeriği ... */}
                      {post.imageUrl && ( <figure className="h-48 flex-shrink-0"> <img src={`http://localhost:5001${post.imageUrl}`} alt={post.title.replace(/\"/g, '')} className="w-full h-full object-cover"/> </figure> )}
                      <div className="card-body p-5 flex flex-col flex-grow">
                         <h2 className="card-title text-xl mb-2"> {post.title.replace(/\"/g, '')} </h2>
