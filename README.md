@@ -1,6 +1,6 @@
 # Blog Battle - Yazıların Yarıştığı Oylama Platformu
 
-Bu proje,Tarvina Yazılım için Full Stack Web Developer mülakat görevi kapsamında 3 gün içinde geliştirilmiştir. Proje, kullanıcıların blog yazıları oluşturabildiği, bu yazıların rastgele veya kategoriye göre eşleşerek yarıştığı ve kullanıcı oylarıyla kazananların belirlendiği bir platformdur.
+Proje, kullanıcıların blog yazıları oluşturabildiği, bu yazıların rastgele veya kategoriye göre eşleşerek yarıştığı ve kullanıcı oylarıyla kazananların belirlendiği bir platformdur.
 
 **GitHub Reposu:** https://github.com/elffba/blog-battle-project
 
