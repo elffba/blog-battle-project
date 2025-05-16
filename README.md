@@ -1,4 +1,4 @@
-# Blog Battle - The Voting Platform Where Posts Compete
+# Blog Battle 
 
 The project is a platform where users can create blog posts, these posts compete by being matched randomly or by category, and winners are determined by user votes.
 
