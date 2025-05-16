@@ -1,148 +1,148 @@
-# Blog Battle - Yazıların Yarıştığı Oylama Platformu
+# Blog Battle - The Voting Platform Where Posts Compete
 
-Proje, kullanıcıların blog yazıları oluşturabildiği, bu yazıların rastgele veya kategoriye göre eşleşerek yarıştığı ve kullanıcı oylarıyla kazananların belirlendiği bir platformdur.
+The project is a platform where users can create blog posts, these posts compete by being matched randomly or by category, and winners are determined by user votes.
 
-**GitHub Reposu:** https://github.com/elffba/blog-battle-project
+**GitHub Repo:** [https://github.com/elffba/blog-battle-project](https://github.com/elffba/blog-battle-project)
 
-**Anasayfa Ekran Görüntüsü:**
-![Anasayfa Ekran Görüntüsü](images/anasayfa.png)
+**Homepage Screenshot:**
+![Homepage Screenshot](images/anasayfa.png)
 
-**Oylama Ekran Görüntüsü:**
-![Oylama Ekran Görüntüsü](images/battle.png)
+**Voting Screen Screenshot:**
+![Voting Screen Screenshot](images/battle.png)
 
- ## Projenin Amacı ve Temel Özellikler
+## Project Purpose and Core Features
 
-* Kullanıcıların kayıt olup giriş yapabilmesi (JWT ile).
-* Giriş yapmış kullanıcıların blog yazıları (başlık, içerik, kategori, görsel) ekleyebilmesi, güncelleyebilmesi ve silebilmesi.
-* Ziyaretçilerin yazıları okuyabilmesi.
-* Yazıların rastgele (veya kategoriye göre - *API desteği eklendi, UI yok*) eşleşerek "Battle" sayfasına düşmesi.
-* Giriş yapmış kullanıcıların aktif eşleşmelerdeki iki yazı arasında oy kullanabilmesi (her eşleşmeye 1 oy hakkı).
-* Oylama sonrası sonuçların yüzde olarak gösterilmesi.
-* Biten eşleşmelerde kazanan yazının belirlenmesi ve işaretlenmesi (kazanma sayısı ve rozet ile).
-* Basitleştirilmiş turnuva mantığı: Kazanan yazıların kazanma sayısı (`wins`) ve tur (`currentRound`) bilgisi güncellenir. Yeni eşleşmelerde daha düşük turdaki veya kazanma sayısındaki postlar önceliklendirilir (tam otomatik bracket ilerlemesi yerine).
-* Temel liderlik tablosu görünümü (kazanma sayısına göre sıralama).
-* Arayüzden yeni eşleşme başlatma butonu (test/demo için).
-* **Responsive Tasarım:** Uygulama farklı ekran boyutlarına uyumlu bir responsive tasarıma sahiptir.
+* Users can register and log in (with JWT).
+* Logged-in users can add (title, content, category, image), update, and delete blog posts.
+* Visitors can read posts.
+* Posts are matched randomly (or by category - *API support added, UI not available*) and appear on the "Battle" page.
+* Logged-in users can vote between two posts in active matches (1 vote per match).
+* Voting results are displayed as percentages after voting.
+* The winning post in finished matches is determined and marked (with win count and a badge).
+* Simplified tournament logic: The win count (`wins`) and round (`currentRound`) of winning posts are updated. Posts with lower rounds or win counts are prioritized in new matches (instead of fully automatic bracket progression).
+* Basic leaderboard view (sorted by win count).
+* Button on the interface to start a new match (for testing/demo purposes).
+* **Responsive Design:** The application has a responsive design that adapts to different screen sizes.
 
-## Kullanılan Teknolojiler
+## Used Technologies
 
-**Backend:**
+### Backend:
 
 * Node.js
 * Express.js
-* MongoDB (Veritabanı)
+* MongoDB 
 * Mongoose (ODM)
-* JSON Web Token (JWT) - Kimlik doğrulama için
-* Bcryptjs - Şifre hash'leme için
-* Multer - Dosya (görsel) yükleme için
-* Cors - Cross-Origin Resource Sharing için
-* Dotenv - Ortam değişkenleri için
+* JSON Web Token (JWT) - For authentication
+* Bcryptjs - For password hashing
+* Multer - For file (image) uploading
+* Cors - For Cross-Origin Resource Sharing
+* Dotenv - For environment variables
 
-**Frontend:**
+### Frontend:
 
-* React (Vite ile)
-* React Router DOM v6 - Sayfa yönlendirme için
-* Redux Toolkit - Global state yönetimi için
-* Axios - API istekleri için
-* Tailwind CSS v3 - Stil altyapısı için
-* DaisyUI - Tailwind CSS component kütüphanesi (Tema: light)
+* React (with Vite)
+* React Router DOM v6 - For page routing
+* Redux Toolkit - For global state management
+* Axios - For API requests
+* Tailwind CSS v3 - For styling infrastructure
+* DaisyUI - Tailwind CSS component library 
 
-## Kurulum ve Çalıştırma
+## Setup and Running
 
-Projeyi yerel makinenizde çalıştırmak için aşağıdaki adımları takip ediniz:
+To run the project on your local machine, follow the steps below:
 
-### Ön Gereksinimler
+### Prerequisites
 
-* Node.js (v18 veya üzeri önerilir)
-* npm (Node.js ile birlikte gelir)
-* MongoDB (Lokal kurulum veya MongoDB Atlas hesabı)
+* Node.js (v18 or higher recommended)
+* npm (comes with Node.js)
+* MongoDB (Local installation or MongoDB Atlas account)
 * Git
 
-### Adımlar
+### Steps
 
-1.  **Projeyi Klonlama:**
+1.  **Clone the Project:**
     ```bash
-    git clone [GitHub Repo Adresin]
+    git clone [https://github.com/elffba/blog-battle-project.git](https://github.com/elffba/blog-battle-project.git)
     cd blog-battle-project
     ```
 
-2.  **Backend Kurulumu:**
-    * Backend klasörüne gidin:
-      ```bash
-      cd backend
-      ```
-    * Gerekli paketleri kurun:
-      ```bash
-      npm install
-      ```
-    * `.env` Dosyasını Oluşturun: `backend` klasörünün ana dizininde `.env` adında bir dosya oluşturun ve aşağıdaki değişkenleri kendi bilgilerinizle doldurun:
-      ```dotenv
-      NODE_ENV=development
-      PORT=5001 # Backend sunucusunun çalışacağı port (frontend'den farklı olmalı)
-      MONGO_URI=mongodb+srv://KULLANICI_ADIN:<SIFREN>@CLUSTER_ADIN.mongodb.net/blogBattleDb?retryWrites=true&w=majority # MongoDB bağlantı adresiniz
-      JWT_SECRET=cokgizlibirjsonwebtokenanahtaribunuuret # Güvenli bir JWT secret key üretin
-      ```
-      * **Not:** `MONGO_URI` için kendi MongoDB Atlas bağlantı string'inizi veya lokal MongoDB adresinizi kullanın. `blogBattleDb` yerine farklı bir veritabanı adı kullanabilirsiniz.
-    * Backend sunucusunu geliştirme modunda başlatın:
-      ```bash
-      npm run dev
-      ```
-      Sunucu varsayılan olarak `http://localhost:5001` adresinde çalışacaktır.
+2.  **Backend Setup:**
+    * Navigate to the backend folder:
+        ```bash
+        cd backend
+        ```
+    * Install the necessary packages:
+        ```bash
+        npm install
+        ```
+    * Create the `.env` File: In the root directory of the `backend` folder, create a file named `.env` and fill in the following variables with your own information:
+        ```dotenv
+        NODE_ENV=development
+        PORT=5001 # Port for the backend server (must be different from the frontend)
+        MONGO_URI=mongodb+srv://YOUR_USERNAME:<YOUR_PASSWORD>@YOUR_CLUSTER_NAME.mongodb.net/blogBattleDb?retryWrites=true&w=majority # Your MongoDB connection string
+        JWT_SECRET=averysecretjsonwebtokenkeygeneratethis # Generate a secure JWT secret key
+        ```
+        * **Note:** Use your own MongoDB Atlas connection string or local MongoDB address for `MONGO_URI`. You can use a different database name instead of `blogBattleDb`.
+    * Start the backend server in development mode:
+        ```bash
+        npm run dev
+        ```
+        The server will run by default at `http://localhost:5001`.
 
-3.  **Frontend Kurulumu:**
-    * **Yeni bir terminal açın** (backend sunucusu çalışmaya devam etmeli).
-    * Projenin ana dizininden `frontend` klasörüne gidin:
-      ```bash
-      cd ../frontend
-      # Veya proje ana dizinindeyken: cd frontend
-      ```
-    * Gerekli paketleri kurun:
-      ```bash
-      npm install
-      ```
-    * Frontend uygulamasını geliştirme modunda başlatın:
-      ```bash
-      npm run dev
-      ```
-      Uygulama genellikle `http://localhost:5173` adresinde açılacaktır (terminaldeki adresi kontrol edin).
+3.  **Frontend Setup:**
+    * **Open a new terminal** (the backend server should continue running).
+    * From the project's root directory, navigate to the `frontend` folder:
+        ```bash
+        cd ../frontend
+        # Or if you are in the project root directory: cd frontend
+        ```
+    * Install the necessary packages:
+        ```bash
+        npm install
+        ```
+    * Start the frontend application in development mode:
+        ```bash
+        npm run dev
+        ```
+        The application will usually open at `http://localhost:5173` (check the address in the terminal).
 
-4.  **Uygulamayı Kullanma:**
-    * Tarayıcınızda frontend adresini (`http://localhost:5173`) açın.
-    * Yeni bir hesapla kayıt olun veya mevcut bir hesapla giriş yapın.
-    * Yazı oluşturun, oylama sayfasına gidin, oy verin!
-    * Yeni eşleşmeler başlatmak için anasayfadaki "Yeni Kapışma Başlat!" butonunu kullanabilirsiniz.
-    * 
-## API Endpointleri (Özet)
+4.  **Using the Application:**
+    * Open the frontend address (`http://localhost:5173`) in your browser.
+    * Register with a new account or log in with an existing one.
+    * Create posts, go to the voting page, and vote!
+    * You can use the "Start New Battle!" button on the homepage to initiate new matches.
 
-Bu proje aşağıdaki temel API endpointlerini sunmaktadır:
+## API Endpoints (Summary)
 
-### Auth (Kimlik Doğrulama)
+This project provides the following core API endpoints:
 
-* `POST /api/auth/register`: Yeni bir kullanıcı kaydı gerçekleştirir.
-* `POST /api/auth/login`: Kullanıcının giriş yapmasını sağlar ve bir JWT (JSON Web Token) döndürür.
+### Auth (Authentication)
 
-### Posts (Yazılar)
+* `POST /api/auth/register`: Registers a new user.
+* `POST /api/auth/login`: Logs in a user and returns a JWT (JSON Web Token).
 
-* `GET /api/posts`: Sistemdeki tüm blog yazılarını listeler.
-* `POST /api/posts`: Yeni bir blog yazısı oluşturur. **(Token Gerekli, FormData)**
-* `GET /api/posts/:id`: Belirli bir ID'ye sahip blog yazısının detaylarını getirir.
-* `PUT /api/posts/:id`: Belirli bir ID'ye sahip blog yazısını günceller. **(Token Gerekli, Yazar Kontrolü, FormData)**
-* `DELETE /api/posts/:id`: Belirli bir ID'ye sahip blog yazısını siler. **(Token Gerekli, Yazar Kontrolü)**
+### Posts
 
-### Matches (Eşleşmeler)
+* `GET /api/posts`: Lists all blog posts in the system.
+* `POST /api/posts`: Creates a new blog post. **(Token Required, FormData)**
+* `GET /api/posts/:id`: Retrieves the details of a blog post with a specific ID.
+* `PUT /api/posts/:id`: Updates a blog post with a specific ID. **(Token Required, Author Check, FormData)**
+* `DELETE /api/posts/:id`: Deletes a blog post with a specific ID. **(Token Required, Author Check)**
 
-* `POST /api/matches/start`: Yeni bir aktif eşleşme başlatır. **(İsteğe bağlı olarak body'de `{ "category": "..." }` ile kategori belirtilebilir)**
-* `GET /api/matches/active`: Oylama için rastgele bir aktif eşleşmeyi getirir.
-* `POST /api/matches/:matchId/vote`: Belirli bir eşleşmeye oy verir. **(Token Gerekli, Body: `{ "votedForPostId": "..." }`)**
-* `POST /api/matches/:matchId/finish`: Aktif bir eşleşmeyi sonlandırır ve kazananı belirler. **(Token Gerekli)**
+### Matches
 
-**Not:** Bu API endpointleri Insomnia kullanılarak test edilmiştir.
+* `POST /api/matches/start`: Starts a new active match. **(Optionally, category can be specified in the body with `{ "category": "..." }`)**
+* `GET /api/matches/active`: Retrieves a random active match for voting.
+* `POST /api/matches/:matchId/vote`: Casts a vote for a specific match. **(Token Required, Body: `{ "votedForPostId": "..." }`)**
+* `POST /api/matches/:matchId/finish`: Finishes an active match and determines the winner. **(Token Required)**
 
-## Bilinen Kısıtlamalar ve Olası İyileştirmeler
+**Note:** These API endpoints have been tested using Insomnia.
 
-* **Turnuva Mantığı:** Sistem şu anda tam bir bracket (turnuva ağacı) yapısını otomatik olarak ilerletmek yerine, kazanma sayısına göre basit bir ilerleme mantığı ve rastgele eşleşme (uygun postlar arasında) kullanmaktadır. Kazananlar bir sonraki tura geçer (`currentRound` güncellenir) ve elenenler işaretlenir, ancak eşleşmeler her zaman kesin olarak aynı turdaki kazananlar arasında olmayabilir (basitleştirilmiş `startNewMatch` mantığı).
-* **Eşleşme Başlatma:** Yeni eşleşmeler şu anda sadece anasayfadaki buton aracılığıyla manuel olarak tetiklenmektedir. Otomatik eşleşme sistemi eklenmemiştir.
-* **Bildirimler:** Yazısı oylamaya çıkan yazarlara bildirim gönderme özelliği eklenmemiştir.
-* **Gerçek Zamanlı Güncellemeler:** Oylama sonuçları oy verdikten sonra veya sayfa yenilendiğinde güncellenir, WebSockets ile anlık güncelleme yoktur.
-* **UI/UX:** Arayüz işlevseldir ancak animasyonlar (oylama geçişi), detaylı responsive testler ve daha gelişmiş kullanıcı geri bildirimleri (örn: toast notification) eklenebilir.
-* **Kategoriye Göre Eşleşme:** Backend kategoriye göre eşleşmeyi desteklese de, frontend'de kategori seçerek eşleşme başlatma arayüzü bulunmamaktadır.
+## Known Limitations and Potential Improvements
+
+* **Tournament Logic:** The system currently uses a simple progression logic based on win count and random matching (among eligible posts) rather than automatically advancing a full bracket structure. Winners advance to the next round (`currentRound` is updated) and losers are marked, but matches may not always be strictly between winners of the same round (simplified `startNewMatch` logic).
+* **Match Initiation:** New matches are currently only triggered manually via the button on the homepage. An automatic matching system has not been implemented.
+* **Notifications:** A feature to send notifications to authors whose posts are up for voting has not been added.
+* **Real-time Updates:** Voting results are updated after voting or when the page is refreshed; there are no instant updates with WebSockets.
+* **UI/UX:** The interface is functional, but animations (voting transitions), detailed responsive tests, and more advanced user feedback (e.g., toast notifications) could be added.
+* **Category-Based Matching:** Although the backend supports category-based matching, the frontend does not have an interface for selecting a category to start a match.
